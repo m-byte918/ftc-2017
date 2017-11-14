@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.robotcontroller.external.samples;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -55,8 +56,10 @@ import java.io.Console;
  *   As the arm servo approaches 0, the arm position moves up (away from the floor).
  *   As the claw servo approaches 0, the claw opens up (drops the game element).
  */
-public class Hardware_FTC_OpMode extends OpMode
-{
+//@TeleOp(name = "Hardware TeleOp", group = "TeleOp")
+
+public class Hardware_FTC_OpMode {
+
     /* Public OpMode members. */
     public DcMotor leftDrive      = null;
     public DcMotor rightDrive     = null;
@@ -66,23 +69,16 @@ public class Hardware_FTC_OpMode extends OpMode
     public DcMotor leftDriveBack  = null;
     public DcMotor rightDriveBack = null;
 
-    public final static double CLAW_MIN_RANGE   = 0.2;
-    public final static double CLAW_MAX_RANGE   = 0.7;
-    public final static double CLAW_HOME        = 0.2;
+    public final static double CLAW_MIN_RANGE = 0.2;
+    public final static double CLAW_MAX_RANGE = 0.7;
+    public final static double CLAW_HOME      = 0.2;
 
     /* Local OpMode members. */
-    private HardwareMap hwMap = null;
+    private HardwareMap hwMap  = null;
     private ElapsedTime period = new ElapsedTime();
 
-    // These must be overloaded to avoid build errors for some reason
-
-    public void loop() { }
-    public void init() { }
-
-    /* Constructor */
     public void Hardware_FTC_OpMode() { }
 
-    /* Initialize standard Hardware interfaces */
     public void init(HardwareMap ahwMap) {
         // save reference to HW Map
         hwMap = ahwMap;
@@ -100,60 +96,21 @@ public class Hardware_FTC_OpMode extends OpMode
         leftDriveBack.setDirection(DcMotor.Direction.REVERSE);
 
         // Set all motors to zero power
-        leftDrive.setPower(0);
-        leftDriveBack.setPower(0);
-        rightDrive.setPower(0);
-        rightDriveBack.setPower(0);
         arm.setPower(0);
         claw.setPosition(CLAW_HOME);
+        leftDrive.setPower(0);
+        rightDrive.setPower(0);
+        leftDriveBack.setPower(0);
+        rightDriveBack.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER)
-        rightDriveBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER)
-        leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER)
-        leftDriveBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER)
-        arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER)
-        extend.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER)
-    }
-
-    public void Auto() {
-        //Do things for our amusement
-        /* Things it must du:
-         * Scan QR Code and place block in boi
-         * Push ball of opposite color off of platboi
-         * balance on platboi
-         */
-        
-    }
-
-    // functions we probs need for autonomous
-
-    public int scanPictorgraph() {
-        // Do something to scan the pictograph(s)
-        return 0;
-    }
-    public int getPictographType() {
-        // Return 1 if picture is left
-        // Return 2 if picture is center
-        // Return 3 if picture is right
-        return 0;
-    }
-    public int scanColor() {
-        // Do something to scan color
-        return 0;
-    }
-    public int getColor() {
-        // Return 1 if yellow
-        // Return 2 if black
-        return 0;
-    }
-    public void rebalanceRobot() {
-        // Do something to rebalance the robot so
-        // it can safely stand on the balance platform
-    }
-    public void doStuffWithBlocks() {
-        // Self explanatory
+        arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        extend.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftDriveBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightDriveBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 }
 
