@@ -61,17 +61,18 @@ import java.io.Console;
 public class Hardware_FTC_OpMode {
 
     /* Public OpMode members. */
+    public DcMotor claw           = null;
+    public DcMotor leftElevator   = null;
+    public DcMotor rightElevator  = null;
+    //public DcMotor sideDrive      = null;
     public DcMotor leftDrive      = null;
     public DcMotor rightDrive     = null;
-    public DcMotor arm            = null;
-    public Servo   claw           = null;
-    public DcMotor extend         = null;
     public DcMotor leftDriveBack  = null;
     public DcMotor rightDriveBack = null;
 
-    public final static double CLAW_MIN_RANGE = 0.2;
-    public final static double CLAW_MAX_RANGE = 0.7;
-    public final static double CLAW_HOME      = 0.2;
+    //public final static double CLAW_MIN_RANGE = 0.2;
+    //public final static double CLAW_MAX_RANGE = 0.7;
+    //public final static double CLAW_HOME      = 0.2;
 
     /* Local OpMode members. */
     private HardwareMap hwMap  = null;
@@ -84,9 +85,10 @@ public class Hardware_FTC_OpMode {
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        arm            = hwMap.get(DcMotor.class, "arm");
-        claw           = hwMap.get(Servo.class, "claw");
-        extend         = hwMap.get(DcMotor.class, "extend");
+        claw           = hwMap.get(DcMotor.class, "claw");
+        leftElevator   = hwMap.get(DcMotor.class, "left_elevator");
+        rightElevator  = hwMap.get(DcMotor.class, "right_elevator");
+        //sideDrive      = hwMap.get(DcMotor.class, "side_drive");
         leftDrive      = hwMap.get(DcMotor.class, "left_drive");
         rightDrive     = hwMap.get(DcMotor.class, "right_drive");
         leftDriveBack  = hwMap.get(DcMotor.class, "left_drive_back");
@@ -96,8 +98,10 @@ public class Hardware_FTC_OpMode {
         leftDriveBack.setDirection(DcMotor.Direction.REVERSE);
 
         // Set all motors to zero power
-        arm.setPower(0);
-        claw.setPosition(CLAW_HOME);
+        claw.setPower(0);
+        leftElevator.setPower(0);
+        rightElevator.setPower(0);
+        //sideDrive.setPower(0);
         leftDrive.setPower(0);
         rightDrive.setPower(0);
         leftDriveBack.setPower(0);
@@ -105,8 +109,10 @@ public class Hardware_FTC_OpMode {
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        extend.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        claw.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftElevator.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightElevator.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //sideDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftDriveBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -114,8 +120,19 @@ public class Hardware_FTC_OpMode {
     }
 }
 
-// Reference for controller:
-// https://images-na.ssl-images-amazon.com/images/I/91RsGVBf1IL._SL1500_.jpg
+/*
+Controls (for now):
+
+Joysticks:  Move wheels
+Button A:   Close claw
+Button B:   Open claw
+Dpad-Up:    Move elevator/claw up
+Dpad-Down:  Move elevator/claw down
+Dpad-Left:  Move sideways left (move middle wheel left)
+Dpad-Right: Move sideways right (move middle wheel right)
+
+Controller reference: https://images-na.ssl-images-amazon.com/images/I/91RsGVBf1IL._SL1500_.jpg
+*/
 
 /*
 Steps to fix the no usb devices recognized shit:
