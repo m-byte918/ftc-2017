@@ -32,7 +32,6 @@ package org.firstinspires.ftc.robotcontroller.external.samples;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name="FTC_OpMode: TeleOp Tank", group="TeleOp")
 @Disabled
@@ -41,10 +40,9 @@ public class FTC_OpMode extends OpMode {
     /* Declare OpMode members. */
     Hardware_FTC_OpMode robot = new Hardware_FTC_OpMode();
 
-    double left;
-    double right;
-    //double clawSpeed = 3;
-    //private double clawPosition = robot.CLAW_HOME;
+    double left, right;
+
+    private double clawPosition = robot.CLAW_HOME;
 
     // Initialize the hardware variables.
     // The init() method of the hardware class does all the work here
@@ -67,38 +65,39 @@ public class FTC_OpMode extends OpMode {
         robot.rightDrive.setPower(right);
         robot.rightDriveBack.setPower(right);
 
-        // Open/close claw
-        if (gamepad1.a && gamepad1.b) {
-            robot.claw.setPower(0);
+        // Move elevator up/down
+        if (gamepad1.dpad_up && gamepad1.dpad_down) {
+            robot.elevator.setPower(0);
         } else {
-            if (gamepad1.a)
-                robot.claw.setPower(-10);
-            else if (gamepad1.b)
-                robot.claw.setPower(10);
+            if (gamepad1.dpad_up)
+                robot.elevator.setPower(-6.25);
+            else if (gamepad1.dpad_down)
+                robot.elevator.setPower(6.25);
         }
 
-        // Move elevator motors up/down
-        if (gamepad1.dpad_up && gamepad1.dpad_down) {
-            robot.leftElevator.setPower(0);
-            robot.rightElevator.setPower(0);
-        } else {
-            if (gamepad1.dpad_up) {
-                robot.leftElevator.setPower(50);
-                robot.rightElevator.setPower(50);
-            }
-            else if (gamepad1.dpad_down) {
-                robot.leftElevator.setPower(-50);
-                robot.rightElevator.setPower(-50);
-            }
+        // Don't move if nothing is pressed
+        if (!gamepad1.dpad_up && !gamepad1.dpad_down) {
+            robot.elevator.setPower(0);
+        }
+
+        // opens and closes claw
+        if (!(gamepad1.a && gamepad1.b)) {
+            if (gamepad1.b && clawPosition <= robot.CLAW_MAX_RANGE)
+                robot.claw.setPosition(clawPosition += 0.01);
+            if (gamepad1.a && clawPosition >= robot.CLAW_MIN_RANGE)
+                robot.claw.setPosition(clawPosition -= 0.01);
         }
 
         // Send telemetry message to signify robot running;
         telemetry.addLine("Motors ~");
-        telemetry.addData("left",  "%.2f", left);
-        telemetry.addData("right", "%.2f", right);
+        telemetry.addData("leftDrive power:",  "%.2f", robot.leftDrive.getPower());
+        telemetry.addData("rightDrive power:", "%.2f", robot.rightDrive.getPower());
+        telemetry.addData("leftDriveBack power:",  "%.2f", robot.leftDriveBack.getPower());
+        telemetry.addData("rightDriveBack power:", "%.2f", robot.rightDriveBack.getPower());
+        telemetry.addData("Elevator power: ", "%.2f", robot.elevator.getPower());
+        telemetry.addData("Claw position: ", "%.2f", robot.claw.getPosition());
         telemetry.update();
     }
-}
 
 /*
 Controls (for now):
@@ -113,3 +112,5 @@ Dpad-Right: Move sideways right (move middle wheel right)
 
 Controller reference: https://images-na.ssl-images-amazon.com/images/I/91RsGVBf1IL._SL1500_.jpg
 */
+}
+
